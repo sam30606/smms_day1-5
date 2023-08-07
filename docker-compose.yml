@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:7.0.12
+    container_name: smms_day1-5_redis
+    volumes:
+      - ./redisConfig/redisData:/var/lib/redis
+      - ./redisConfig/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redisConfig/users.acl:/usr/local/etc/redis/users.acl
+      - ./redisConfig/redis-server.log:/var/log/redis/redis-server.log
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  web:
+    build: .
+    image: sam/smms_day1-5
+    container_name: smms_day1-5
+    depends_on:
+      - 'redis'
+    ports:
+      - '4000:3000'
